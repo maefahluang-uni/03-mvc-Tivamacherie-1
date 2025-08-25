@@ -1,55 +1,57 @@
 package th.mfu;
 
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 public class ConcertController {
 
-    private static Map<Integer, Concert> concertMap = new HashMap<>();
-    private static int nextId = 1;
+    private List<Concert> concerts = new ArrayList<>();
+    private int nextId = 1;
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    // เตรียม concert object ให้ฟอร์มใช้ (สำคัญ)
+    @ModelAttribute("concert")
+    public Concert newConcert() {
+        return new Concert();
     }
 
-    @GetMapping("/concert")
-    public String listConcert(Model model) {
-        model.addAttribute("concert", concertMap.values());
+    @GetMapping("/concerts")
+    public String listConcerts(Model model) {
+        model.addAttribute("concerts", concerts);
         return "list-concert";
     }
 
-    @GetMapping("/add-concert")
-    public String addAConcertForm(Model model) {
-        model.addAttribute("concert", new Concert());
-        return "add-concert-form";
-    }
-
-    @PostMapping("/concert")
+    @PostMapping("/concerts")
     public String saveConcert(@ModelAttribute Concert concert) {
+        // Debug: print ข้อมูลที่ได้รับ
+        System.out.println("Received concert: " + concert.getTitle() + ", " + concert.getPerformer() + ", " + concert.getDate());
+        
         concert.setId(nextId++);
-        concertMap.put(concert.getId(), concert);
-        return "redirect:/concert";
+        concerts.add(concert);
+        return "redirect:/concerts";
     }
 
     @GetMapping("/delete-concert/{id}")
     public String deleteConcert(@PathVariable int id) {
-        concertMap.remove(id);
-        return "redirect:/concert";
+        Iterator<Concert> iterator = concerts.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getId() == id) {
+                iterator.remove();
+                break;
+            }
+        }
+        return "redirect:/concerts";
     }
 
     @GetMapping("/delete-concert")
-    public String removeAllConcerts() {
-        concertMap.clear();
+    public String deleteAllConcerts() {
+        concerts.clear();
         nextId = 1;
-        return "redirect:/concert";
+        return "redirect:/concerts";
     }
 }

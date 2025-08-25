@@ -1,33 +1,45 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>Concert List</title>
 </head>
 <body>
-    <h1>Concert List</h1>
-    <a href="/add-concert">Add Concert</a> |
-    <a href="/delete-concert">Delete All Concerts</a>
+<h1>Concerts</h1>
 
-    <table border="1">
+<!-- ฟอร์มเพิ่มคอนเสิร์ต -->
+<form th:action="@{/concerts}" method="post" th:object="${concert}">
+    <p>Title: <input type="text" th:field="*{title}" required /></p>
+    <p>Performer: <input type="text" th:field="*{performer}" required /></p>
+    <p>Date: <input type="date" th:field="*{date}" required /></p>
+    <p>Description: <textarea th:field="*{description}"></textarea></p>
+    <p><button type="submit">Add Concert</button></p>
+</form>
+
+<!-- ตารางแสดงคอนเสิร์ตทั้งหมด -->
+<table border="1">
+    <thead>
         <tr>
-            <th>ID</th>
             <th>Title</th>
             <th>Performer</th>
             <th>Date</th>
             <th>Description</th>
-            <th>Actions</th>
+            <th>Action</th>
         </tr>
-        <tr th:each="concertItem : ${concert}">
-            <td th:text="${concertItem.id}"></td>
-            <td th:text="${concertItem.title}"></td>
-            <td th:text="${concertItem.performer}"></td>
-            <td th:text="${#dates.format(concertItem.date, 'yyyy-MM-dd')}"></td>
-            <td th:text="${concertItem.description}"></td>
-            <td>
-                <a th:href="@{'/delete-concert/' + ${concertItem.id}}">Delete</a>
-            </td>
-        </tr>
-    </table>
+    </thead>
+    <tbody>
+    <tr th:each="concert : ${concerts}">
+        <td th:text="${concert.title}">Title</td>
+        <td th:text="${concert.performer}">Performer</td>
+        <td th:text="${concert.date}">Date</td>
+        <td th:text="${concert.description}">Description</td>
+        <td>
+            <a th:href="@{'/delete-concert/' + ${concert.id}}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/delete-concert}">Delete All Concerts</a></p>
+
 </body>
 </html>

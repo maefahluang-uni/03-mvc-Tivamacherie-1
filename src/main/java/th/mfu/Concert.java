@@ -1,35 +1,58 @@
 package th.mfu;
 
-import java.util.Date;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Concert {
     private int id;
     private String title;
     private String performer;
-    private Date date;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
+
     private String description;
 
-    public Concert() {}
-
-    public Concert(String title, String performer, Date date, String description) {
-        this.title = title;
-        this.performer = performer;
-        this.date = date;
-        this.description = description;
+    public Concert() {
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getPerformer() { return performer; }
-    public void setPerformer(String performer) { this.performer = performer; }
+    public String getTitle() {
+        return title;
+    }
 
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getPerformer() {
+        return performer;
+    }
+
+    public void setPerformer(String performer) {
+        this.performer = performer;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
